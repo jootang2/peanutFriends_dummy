@@ -17,7 +17,6 @@ public class MemberService {
         return saveMember;
     }
 
-
     public Member findByEmail(String email) {
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
         return findMember;
