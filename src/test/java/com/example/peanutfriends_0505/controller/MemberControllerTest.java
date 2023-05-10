@@ -28,6 +28,9 @@ class MemberControllerTest {
     MockMvc mockMvc;
 
     @Autowired
+    MemberService memberService;
+
+    @Autowired
     ObjectMapper objectMapper;
 
     @Test
@@ -44,6 +47,9 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.name").exists())
                 .andExpect(jsonPath("$.regDate").exists())
                 .andDo(print());
+
+        Member member = memberService.findByEmail(memberSignUpDto.getEmail());
+        memberService.removeMemberAccount(member);
     }
 
     @Test
@@ -65,6 +71,7 @@ class MemberControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.memberId").exists())
                 .andExpect(jsonPath("$.name").exists())
+                .andExpect(jsonPath("$.jwt").exists())
                 .andDo(print());
     }
 

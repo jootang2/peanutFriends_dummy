@@ -27,3 +27,8 @@ logging:
           descriptor:
             sql: trace
 
+#jwt
+jwt:
+  secretKey: ABCLASDIFMXZCVKASDFMXCVA1234651658ASD32AS1DF56A52XC1FA6S8DF4AS62D1F
+  refreshKey: 12345678901234567890123456789012
+

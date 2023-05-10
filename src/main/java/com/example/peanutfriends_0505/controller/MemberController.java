@@ -55,14 +55,15 @@ public class MemberController {
         Member findMember = memberService.findByEmail(memberLoginDto.getEmail());
 
         if(!findMember.getPassword().equals(memberLoginDto.getPassword())) {
-            System.out.println("findMember.getPassword() = " + findMember.getPassword());
-            System.out.println("memberLoginDto.getPassword() = " + memberLoginDto.getPassword());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+
+        String jwt = memberService.login(findMember);
 
         MemberLoginResponseDto memberLoginResponseDto = new MemberLoginResponseDto();
         memberLoginResponseDto.setMemberId(findMember.getMemberId());
         memberLoginResponseDto.setName(findMember.getName());
+        memberLoginResponseDto.setJwt(jwt);
 
         return new ResponseEntity(memberLoginResponseDto, HttpStatus.OK);
     }
