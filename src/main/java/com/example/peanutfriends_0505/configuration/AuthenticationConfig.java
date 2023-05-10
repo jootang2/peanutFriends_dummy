@@ -1,17 +1,28 @@
 package com.example.peanutfriends_0505.configuration;
 
+import com.example.peanutfriends_0505.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AuthenticationConfig {
+
+    private final MemberService memberService;
+    @Value("${jwt.secretKey}")
+    String secretKey;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -25,6 +36,8 @@ public class AuthenticationConfig {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt를 사용하는 경우 씀
-                .and().build();
+                .and()
+                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
