@@ -20,7 +20,7 @@ public class MemberService {
 
     private Long expiredMs = 1000 * 60 * 60l;
 
-    public Member addMember(Member member){
+    public Member addMember(Member member) {
         Member saveMember = memberRepository.save(member);
         return saveMember;
     }
@@ -30,11 +30,16 @@ public class MemberService {
         return findMember;
     }
 
-    public void removeMemberAccount(Member member){
+    public Member findById(Long memberId) {
+        Member findMember =  memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        return findMember;
+    }
+
+    public void removeMemberAccount(Member member) {
         memberRepository.delete(member);
     }
 
-    public String login(Member member){
+    public String login(Member member) {
         return JwtUtil.createJwt(member, secretKey, expiredMs);
     }
 }

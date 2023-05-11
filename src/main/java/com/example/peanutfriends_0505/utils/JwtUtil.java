@@ -9,7 +9,15 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    public static boolean isExpired(String token, String secretKey){
+    public static Long getMemberId(String token, String secretKey) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("memberId", Long.class);
+    }
+
+    public static boolean isExpired(String token, String secretKey) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
@@ -18,11 +26,9 @@ public class JwtUtil {
                 .before(new Date());
     } //만료 기한이 현재 시간보다 이전이면 isExpired : true
 
-    public static String createJwt(Member member, String secretKey, Long expiredMs){
+    public static String createJwt(Member member, String secretKey, Long expiredMs) {
         Claims claims = Jwts.claims();
         claims.put("memberId", member.getMemberId());
-        claims.put("memberName", member.getName());
-        claims.put("memberEmail", member.getEmail());
 
         return Jwts.builder()
                 .setClaims(claims)
