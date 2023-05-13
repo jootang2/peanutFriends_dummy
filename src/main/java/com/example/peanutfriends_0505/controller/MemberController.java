@@ -1,13 +1,14 @@
 package com.example.peanutfriends_0505.controller;
 
 import com.example.peanutfriends_0505.domain.Member;
-import com.example.peanutfriends_0505.dto.MemberLoginDto;
-import com.example.peanutfriends_0505.dto.MemberLoginResponseDto;
-import com.example.peanutfriends_0505.dto.MemberSignUpDto;
-import com.example.peanutfriends_0505.dto.MemberSignUpResponseDto;
+import com.example.peanutfriends_0505.dto.*;
+import com.example.peanutfriends_0505.repository.MemberRepository;
 import com.example.peanutfriends_0505.service.MemberService;
+import com.example.peanutfriends_0505.service.RefreshTokenService;
+import com.example.peanutfriends_0505.utils.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signUp")
     public ResponseEntity signUp(@RequestBody @Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult){
@@ -58,14 +60,22 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        String jwt = memberService.login(findMember);
+        String accessToken = JwtUtil.createAccessToken(findMember);
+        String refreshToken = JwtUtil.createRefreshToken(findMember);
 
         MemberLoginResponseDto memberLoginResponseDto = new MemberLoginResponseDto();
         memberLoginResponseDto.setMemberId(findMember.getMemberId());
         memberLoginResponseDto.setName(findMember.getName());
-        memberLoginResponseDto.setJwt(jwt);
+        memberLoginResponseDto.setAccessToken(accessToken);
+        memberLoginResponseDto.setRefreshToken(refreshToken);
 
         return new ResponseEntity(memberLoginResponseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto){
+        refreshTokenService.deleteRefreshToken(refreshTokenDto.getRefreshToken());
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

@@ -8,5 +8,6 @@ import lombok.Setter;
 public class MemberLoginResponseDto {
     private Long memberId;
     private String name;
-    private String jwt;
+    private String accessToken;
+    private String refreshToken;
 }
