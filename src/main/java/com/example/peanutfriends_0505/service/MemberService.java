@@ -38,8 +38,4 @@ public class MemberService {
     public void removeMemberAccount(Member member) {
         memberRepository.delete(member);
     }
-
-    public String login(Member member) {
-        return JwtUtil.createJwt(member, secretKey, expiredMs);
-    }
 }

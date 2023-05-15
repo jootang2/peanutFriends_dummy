@@ -1,6 +1,8 @@
 package com.example.peanutfriends_0505.controller;
 
+import com.example.peanutfriends_0505.configuration.AuthenticationConfig;
 import com.example.peanutfriends_0505.domain.Member;
+import com.example.peanutfriends_0505.domain.RefreshToken;
 import com.example.peanutfriends_0505.dto.*;
 import com.example.peanutfriends_0505.repository.MemberRepository;
 import com.example.peanutfriends_0505.service.MemberService;
@@ -21,6 +23,10 @@ public class MemberController {
 
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
+    @Value("${jwt.secretKey}")
+    public String accessSecretKey;
+    @Value("${jwt.refreshKey}")
+    public String refreshSecretKey;
 
     @PostMapping("/signUp")
     public ResponseEntity signUp(@RequestBody @Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult){
@@ -60,8 +66,13 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        String accessToken = JwtUtil.createAccessToken(findMember);
-        String refreshToken = JwtUtil.createRefreshToken(findMember);
+        String accessToken = JwtUtil.createAccessToken(findMember, accessSecretKey);
+        String refreshToken = JwtUtil.createRefreshToken(findMember, refreshSecretKey);
+
+        RefreshToken saveRefreshToken = new RefreshToken();
+        saveRefreshToken.setMemberId(findMember.getMemberId());
+        saveRefreshToken.setValue(refreshToken);
+        refreshTokenService.addToken(saveRefreshToken);
 
         MemberLoginResponseDto memberLoginResponseDto = new MemberLoginResponseDto();
         memberLoginResponseDto.setMemberId(findMember.getMemberId());

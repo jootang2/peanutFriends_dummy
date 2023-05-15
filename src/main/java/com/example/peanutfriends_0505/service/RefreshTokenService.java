@@ -15,4 +15,9 @@ public class RefreshTokenService {
         RefreshToken findRefreshToken = refreshTokenRepository.findByValue(refreshToken).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 RefreshToken입니다."));
         refreshTokenRepository.delete(findRefreshToken);
     }
+
+    public RefreshToken addToken(RefreshToken refreshToken) {
+        RefreshToken saveToken = refreshTokenRepository.save(refreshToken);
+        return saveToken;
+    }
 }

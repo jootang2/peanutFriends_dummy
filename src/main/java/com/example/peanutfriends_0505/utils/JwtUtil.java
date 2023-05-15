@@ -10,12 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 
 public class JwtUtil {
-
-    @Value("${jwt.secretKey}")
-    public static String accessSecretKey;
-    @Value("${jwt.refreshKey}")
-    public static String refreshSecretKey;
-
     public final static Long accessTokenExpiredMs = 60 * 60 * 1000L; //1시간
     public final static Long refreshTokenExpiredMs = 7 * 24 * 60 * 60 * 1000L; //7일
 
@@ -36,7 +30,7 @@ public class JwtUtil {
                 .before(new Date());
     } //만료 기한이 현재 시간보다 이전이면 isExpired : true
 
-    public static String createAccessToken(Member member) {
+    public static String createAccessToken(Member member, String accessSecretKey) {
         Claims claims = Jwts.claims();
         claims.put("memberId", member.getMemberId());
 
@@ -48,7 +42,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String createRefreshToken(Member member) {
+    public static String createRefreshToken(Member member, String refreshSecretKey) {
         Claims claims = Jwts.claims();
         claims.put("memberId", member.getMemberId());
 

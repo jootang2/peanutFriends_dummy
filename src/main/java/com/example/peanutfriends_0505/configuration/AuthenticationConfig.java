@@ -21,7 +21,7 @@ public class AuthenticationConfig {
 
     private final MemberService memberService;
     @Value("${jwt.secretKey}")
-    String secretKey;
+    public String accessSecretKey;
 
 
     @Bean
@@ -37,7 +37,7 @@ public class AuthenticationConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt를 사용하는 경우 씀
                 .and()
-                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(memberService, accessSecretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
