@@ -8,6 +8,7 @@ import com.example.peanutfriends_0505.repository.MemberRepository;
 import com.example.peanutfriends_0505.service.MemberService;
 import com.example.peanutfriends_0505.service.RefreshTokenService;
 import com.example.peanutfriends_0505.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,6 +80,23 @@ public class MemberController {
         memberLoginResponseDto.setName(findMember.getName());
         memberLoginResponseDto.setAccessToken(accessToken);
         memberLoginResponseDto.setRefreshToken(refreshToken);
+
+        return new ResponseEntity(memberLoginResponseDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity refreshToken(@RequestBody RefreshTokenDto refreshTokenDto){
+        RefreshToken refreshToken = refreshTokenService.findRefreshToken(refreshTokenDto.getRefreshToken());
+        Long memberId = JwtUtil.getMemberId(refreshToken.getValue(), refreshSecretKey);
+        Member member = memberService.findById(memberId);
+
+        String accessToken = JwtUtil.createAccessToken(member, accessSecretKey);
+
+        MemberLoginResponseDto memberLoginResponseDto = new MemberLoginResponseDto();
+        memberLoginResponseDto.setMemberId(member.getMemberId());
+        memberLoginResponseDto.setName(member.getName());
+        memberLoginResponseDto.setAccessToken(accessToken);
+        memberLoginResponseDto.setRefreshToken(refreshToken.getValue());
 
         return new ResponseEntity(memberLoginResponseDto, HttpStatus.OK);
     }

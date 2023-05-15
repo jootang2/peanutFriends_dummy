@@ -1,11 +1,9 @@
 package com.example.peanutfriends_0505.utils;
 
 import com.example.peanutfriends_0505.domain.Member;
-import com.example.peanutfriends_0505.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 
