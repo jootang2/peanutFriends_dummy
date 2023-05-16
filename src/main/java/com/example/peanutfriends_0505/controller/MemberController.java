@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -44,6 +47,7 @@ public class MemberController {
         member.setEmail(email);
         member.setName(name);
         member.setPassword(password);
+        member.setRegDate(String.valueOf(LocalDate.now()));
 
         Member saveMember = memberService.addMember(member);
 

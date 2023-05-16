@@ -10,9 +10,9 @@ public class MemberSignUpResponseDto {
 
     private Long memberId;
     private String name;
-    private LocalDateTime regDate;
+    private String regDate;
 
-    public MemberSignUpResponseDto(Long memberId, String name, LocalDateTime regDate) {
+    public MemberSignUpResponseDto(Long memberId, String name, String regDate) {
         this.memberId = memberId;
         this.name = name;
         this.regDate = regDate;

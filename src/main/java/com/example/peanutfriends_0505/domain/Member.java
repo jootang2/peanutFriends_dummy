@@ -27,24 +27,11 @@ public class Member {
 
     private String name;
 
-    @CreationTimestamp
-    private LocalDateTime regDate;
+    private String regDate;
 
-    @CreationTimestamp
-    private LocalDateTime editDate;
+    private String editDate;
 
     public Member() {
 
     }
-
-    public Member(Long memberId, String email, String password, String name, LocalDateTime regDate, LocalDateTime editDate) {
-        this.memberId = memberId;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.regDate = regDate;
-        this.editDate = editDate;
-    }
-
-
 }

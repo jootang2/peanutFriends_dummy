@@ -15,15 +15,20 @@ public class Basket {
     @GeneratedValue
     private Long basketId;
 
+    private String name;
+
+    private String startDate;
+
+    private String endDate;
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
-    private Member captain;
+    private Member masterMember;
 
-    @CreationTimestamp
-    private LocalDateTime regDate;
+    private String regDate;
 
-    @CreationTimestamp
-    private LocalDateTime editDate;
+    private String editDate;
 
-
+    public Basket() {
+    }
 }
