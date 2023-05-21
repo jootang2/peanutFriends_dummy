@@ -61,6 +61,7 @@
 <script>
 import {reactive} from "vue";
 import axios from "axios";
+import store from "@/scripts/store";
 
 export default {
   setup() {
@@ -72,8 +73,8 @@ export default {
     })
 
     const submit = () => {
-      axios.post("/api/members/login", state.form).then(()=>{
-        console.log("Login success");
+      axios.post("/api/members/login", state.form).then((res)=>{
+        store.commit('setAccount', res.data)
         window.alert("로그인 성공");
       })
     }

@@ -87,7 +87,8 @@
              data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Login Screens:</h6>
-            <router-link to="/login" class="collapse-item">Login</router-link>
+            <router-link to="/login" class="collapse-item" v-if="!$store.state.account.id">Login</router-link>
+            <router-link to="/login" class="collapse-item" @click="logout()" v-else>Logout</router-link>
             <a class="collapse-item" href="register.html">Register</a>
             <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
             <div class="collapse-divider"></div>
@@ -394,20 +395,21 @@
 <script>
 
 
-import axios from "axios";
-import {reactive} from "vue";
+import router from "@/scripts/router";
+import store from "@/scripts/store";
 
 export default {
   name: "Home",
   setup() {
+    const logout = () => {
+      store.commit('setAccount', 0);
+      router.push({
+        path: "/"
+      })
+    }
 
-    const state = reactive({
-      items: []
-    })
+    return {logout}
 
-    axios.get("/api/axios/test").then((res) => {
-      state.items = res.data
-    })
   }
 }
 </script>
