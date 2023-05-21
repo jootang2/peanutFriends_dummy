@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
@@ -31,6 +32,7 @@ public class AuthenticationConfig {
                 .csrf().disable() //crossSite 관련 : disable()
                 .cors().and() // cors 관련 : disable()
                 .authorizeRequests() // 여기부터 request 인가 관련
+                .requestMatchers(GET, "/api/axios/test").permitAll()
                 .requestMatchers(POST,"/api/members/signUp", "/api/members/login", "/api/members/refreshToken").permitAll()// 회원가입, 로그인은 항상 허용되어야 한다.
                 .requestMatchers(POST,"/api/**").authenticated()// 그 외, 나머지 api는 인증되어야 함
                 .and()

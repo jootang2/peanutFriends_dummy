@@ -34,6 +34,11 @@ public class BasketController {
         return member.toString();
     }
 
+    @GetMapping("/axios/test")
+    public String axiosTest(){
+        return "axios test success";
+    }
+
     @PostMapping("/basket/create")
     public ResponseEntity addBasket(@RequestBody AddBasketDto addBasketDto, Authentication authentication) {
         Basket basket = new Basket();
