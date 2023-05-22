@@ -1,15 +1,30 @@
 package com.example.peanutfriends_0505.utils;
 
 import com.example.peanutfriends_0505.domain.Member;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import java.util.Date;
 
 public class JwtUtil {
     public final static Long accessTokenExpiredMs = 60 * 60 * 1000L; //1시간
     public final static Long refreshTokenExpiredMs = 7 * 24 * 60 * 60 * 1000L; //7일
+
+    public static Claims getClaims(String token, String secretKey) {
+        if (token != null && !token.isBlank()) {
+            try {
+                Claims claims = Jwts.parser()
+                        .setSigningKey(secretKey)
+                        .parseClaimsJws(token)
+                        .getBody();
+                return claims;
+            } catch (ExpiredJwtException e) {
+
+            } catch (JwtException e) {
+
+            }
+        }
+        return null;
+    }
 
     public static Long getMemberId(String token, String secretKey) {
         return Jwts.parser()

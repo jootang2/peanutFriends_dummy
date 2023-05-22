@@ -9,6 +9,9 @@ import com.example.peanutfriends_0505.service.MemberService;
 import com.example.peanutfriends_0505.service.RefreshTokenService;
 import com.example.peanutfriends_0505.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +36,9 @@ public class MemberController {
     public String refreshSecretKey;
 
     @PostMapping("/signUp")
-    public ResponseEntity signUp(@RequestBody @Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult){
+    public ResponseEntity signUp(@RequestBody @Valid MemberSignUpDto memberSignUpDto, BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
@@ -60,19 +63,30 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid MemberLoginDto memberLoginDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+    public ResponseEntity login(@RequestBody @Valid MemberLoginDto memberLoginDto, BindingResult bindingResult, HttpServletResponse res) {
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
         Member findMember = memberService.findByEmail(memberLoginDto.getEmail());
 
-        if(!findMember.getPassword().equals(memberLoginDto.getPassword())) {
+        if (!findMember.getPassword().equals(memberLoginDto.getPassword())) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
         String accessToken = JwtUtil.createAccessToken(findMember, accessSecretKey);
         String refreshToken = JwtUtil.createRefreshToken(findMember, refreshSecretKey);
+
+        Cookie accessCookie = new Cookie("atk", accessToken);
+        accessCookie.setHttpOnly(true);
+        accessCookie.setPath("/");
+
+        Cookie refreshCookie = new Cookie("rtk", refreshToken);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setPath("/");
+
+        res.addCookie(accessCookie);
+        res.addCookie(refreshCookie);
 
         RefreshToken saveRefreshToken = new RefreshToken();
         saveRefreshToken.setMemberId(findMember.getMemberId());
@@ -89,7 +103,7 @@ public class MemberController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity refreshToken(@RequestBody RefreshTokenDto refreshTokenDto){
+    public ResponseEntity refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
         RefreshToken refreshToken = refreshTokenService.findRefreshToken(refreshTokenDto.getRefreshToken());
         Long memberId = JwtUtil.getMemberId(refreshToken.getValue(), refreshSecretKey);
         Member member = memberService.findById(memberId);
@@ -106,9 +120,19 @@ public class MemberController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto){
+    public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto) {
         refreshTokenService.deleteRefreshToken(refreshTokenDto.getRefreshToken());
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @GetMapping("/check")
+    public ResponseEntity check(@CookieValue(value = "atk", required = false) String accessToken) {
+        if(accessToken != null){
+            Long memberId = JwtUtil.getMemberId(accessToken, accessSecretKey);
+            return new ResponseEntity(memberId, HttpStatus.OK);
+        }
+
+        return new ResponseEntity(null, HttpStatus.OK);
+
+    }
 }
