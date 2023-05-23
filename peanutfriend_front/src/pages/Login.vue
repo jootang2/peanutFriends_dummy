@@ -1,12 +1,22 @@
 <template>
-  <body class="bg-gradient-primary">
+  <body id="page-top">
 
-  <div class="container">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    <Lnb/>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-    <!-- Outer Row -->
-    <div class="row justify-content-center">
+      <!-- Main Content -->
+      <div id="content">
 
-      <div class="col-xl-10 col-lg-12 col-md-9">
+        <TopBar/>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="container">
 
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
@@ -49,13 +59,22 @@
           </div>
         </div>
 
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
       </div>
+      <!-- End of Main Content -->
 
     </div>
+    <!-- End of Content Wrapper -->
 
   </div>
-  </body>
+  <!-- End of Page Wrapper -->
 
+  </body>
+  <LogoutModal/>
 </template>
 
 <script>
@@ -63,8 +82,12 @@ import {reactive} from "vue";
 import axios from "axios";
 import store from "@/scripts/store";
 import router from "@/scripts/router";
+import LogoutModal from "@/components/LogoutModal.vue";
+import TopBar from "@/components/TopBar.vue";
+import Lnb from "@/components/LNB.vue";
 
 export default {
+
   setup() {
     const state = reactive({
       form: {
@@ -72,6 +95,11 @@ export default {
         password: ""
       }
     })
+
+    const test = async  (req) => {
+      console.log("=============")
+      console.log(req.headers.cookie['atk']);
+    }
 
     const submit = () => {
       axios.post("/api/members/login", state.form).then((res)=>{
@@ -84,9 +112,10 @@ export default {
       })
     }
 
-    return {state, submit}
+    return {state, submit, test}
   },
-  name: "Login"
+  name: "Login",
+  components: {LogoutModal, TopBar, Lnb}
 }
 </script>
 

@@ -119,8 +119,50 @@
 </template>
 
 <script>
+import store from "@/scripts/store";
+import router from "@/scripts/router";
+import axios from "axios";
+import {reactive} from "vue";
+
 export default {
   name: 'Lnb',
+  setup() {
+    const state = reactive({
+      form: {
+        refreshToken: ""
+      }
+    })
+
+    console.log(document.cookie)
+    console.log("====")
+
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+          // eslint-disable-next-line
+          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    console.log("atk: " + getCookie("atk"))
+    console.log("rtk: " + getCookie("rtk"))
+
+    state.form.refreshToken = getCookie("rtk")
+
+    const logout = () => {
+      axios.post("/api/members/logout", state.form).then(()=>{
+        store.commit('setAccount', 0);
+        router.push({
+          path: "/"
+        })
+      })
+
+      sessionStorage.removeItem("id");
+
+    }
+
+    return {logout}
+
+  }
 }
 </script>
 

@@ -78,11 +78,11 @@ public class MemberController {
         String refreshToken = JwtUtil.createRefreshToken(findMember, refreshSecretKey);
 
         Cookie accessCookie = new Cookie("atk", accessToken);
-        accessCookie.setHttpOnly(true);
+//        accessCookie.setHttpOnly(true);
         accessCookie.setPath("/");
 
         Cookie refreshCookie = new Cookie("rtk", refreshToken);
-        refreshCookie.setHttpOnly(true);
+//        refreshCookie.setHttpOnly(true);
         refreshCookie.setPath("/");
 
         res.addCookie(accessCookie);
@@ -119,15 +119,26 @@ public class MemberController {
         return new ResponseEntity(memberLoginResponseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/logout")
-    public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto) {
+    @PostMapping("/logout")
+    public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse res) {
         refreshTokenService.deleteRefreshToken(refreshTokenDto.getRefreshToken());
+        Cookie accessCookie = new Cookie("atk", null);
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(0);
+
+        Cookie refreshCookie = new Cookie("rtk", null);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge(0);
+
+        res.addCookie(accessCookie);
+        res.addCookie(refreshCookie);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/check")
     public ResponseEntity check(@CookieValue(value = "atk", required = false) String accessToken) {
-        if(accessToken != null){
+        if (accessToken != null) {
             Long memberId = JwtUtil.getMemberId(accessToken, accessSecretKey);
             return new ResponseEntity(memberId, HttpStatus.OK);
         }
