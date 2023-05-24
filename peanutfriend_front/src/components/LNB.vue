@@ -143,13 +143,16 @@ export default {
       ));
       return matches ? decodeURIComponent(matches[1]) : undefined;
     }
-    console.log("atk: " + getCookie("atk"))
-    console.log("rtk: " + getCookie("rtk"))
-
     state.form.refreshToken = getCookie("rtk")
 
     const logout = () => {
-      axios.post("/api/members/logout", state.form).then(()=>{
+      const config = {
+        headers: {
+          "Authorization" : "Bearer " + getCookie("atk"),
+        }
+      }
+
+      axios.post("/api/members/logout", state.form, config).then(()=>{
         store.commit('setAccount', 0);
         router.push({
           path: "/"
