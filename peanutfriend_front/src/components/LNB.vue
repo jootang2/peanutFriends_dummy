@@ -84,7 +84,7 @@
             <h6 class="collapse-header">Login Screens:</h6>
             <router-link to="/login" class="collapse-item" v-if="!$store.state.account.id">Login</router-link>
             <router-link to="/login" class="collapse-item" @click="logout()" v-else>Logout</router-link>
-            <a class="collapse-item" href="register.html">Register</a>
+            <router-link to="/add/basket" class="collapse-item" >Add Basket</router-link>
             <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>
@@ -122,6 +122,7 @@
 import store from "@/scripts/store";
 import router from "@/scripts/router";
 import axios from "axios";
+import jwt_decode from 'jwt-decode';
 import {reactive} from "vue";
 
 export default {
@@ -144,6 +145,23 @@ export default {
       return matches ? decodeURIComponent(matches[1]) : undefined;
     }
     state.form.refreshToken = getCookie("rtk")
+    console.log(getCookie("atk"))
+    if(getCookie("atk")){
+      const decoded = jwt_decode(getCookie("atk"))
+      let now = new Date();
+      let expiry = decoded.exp - Number(now.getTime().toString().substr(0, 10));
+      if(expiry < 30){
+        const config = {
+          headers: {
+            "Authorization" : "Bearer " + getCookie("atk"),
+          }
+        }
+        axios.post("/api/members/refreshToken", state.form, config).then(()=>{
+        })
+      }
+      console.log(now)
+      console.log(expiry)
+    }
 
     const logout = () => {
       const config = {
