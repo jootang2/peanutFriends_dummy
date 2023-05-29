@@ -82,10 +82,10 @@
              data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Login Screens:</h6>
-            <router-link to="/login" class="collapse-item" v-if="!$store.state.account.id">Login</router-link>
-            <router-link to="/login" class="collapse-item" @click="logout()" v-else>Logout</router-link>
-            <router-link to="/add/basket" class="collapse-item" >Add Basket</router-link>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+            <router-link to="/100" class="collapse-item" v-if="!$store.state.account.id">Login</router-link>
+            <router-link to="/100" class="collapse-item" @click="logout()" v-else>Logout</router-link>
+            <router-link to="/200" class="collapse-item">Join</router-link>
+            <router-link to="/300" class="collapse-item" >Add Basket</router-link>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>
             <a class="collapse-item" href="404.html">404 Page</a>

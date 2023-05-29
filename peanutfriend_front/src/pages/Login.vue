@@ -96,11 +96,6 @@ export default {
       }
     })
 
-    const test = async  (req) => {
-      console.log("=============")
-      console.log(req.headers.cookie['atk']);
-    }
-
     const submit = () => {
       axios.post("/api/members/login", state.form).then((res)=>{
         store.commit('setAccount', res.data);
@@ -112,7 +107,7 @@ export default {
       })
     }
 
-    return {state, submit, test}
+    return {state, submit}
   },
   name: "Login",
   components: {LogoutModal, TopBar, Lnb}

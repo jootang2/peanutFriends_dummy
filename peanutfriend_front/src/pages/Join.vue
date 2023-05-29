@@ -29,31 +29,25 @@
                         <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                       </div>
                       <form class="user">
-                        <div class="form-group row">
-                          <div class="col-sm-6 mb-3 mb-sm-0">
-                            <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                   placeholder="First Name">
-                          </div>
-                          <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                   placeholder="Last Name">
-                          </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control form-control-user" id="joinName"
+                                 placeholder="Name" v-model="state.form.name">
                         </div>
                         <div class="form-group">
-                          <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                 placeholder="Email Address">
+                          <input type="email" class="form-control form-control-user" id="joinEmail"
+                                 placeholder="Email Address" v-model="state.form.email">
                         </div>
                         <div class="form-group row">
                           <div class="col-sm-6 mb-3 mb-sm-0">
                             <input type="password" class="form-control form-control-user"
-                                   id="exampleInputPassword" placeholder="Password">
+                                   id="joinPassword" placeholder="Password" v-model="state.form.password">
                           </div>
                           <div class="col-sm-6">
                             <input type="password" class="form-control form-control-user"
-                                   id="exampleRepeatPassword" placeholder="Repeat Password">
+                                   id="joinRepeatPassword" placeholder="Repeat Password">
                           </div>
                         </div>
-                        <a href="login.html" class="btn btn-primary btn-user btn-block">
+                        <a class="btn btn-primary btn-user btn-block" @click="submit()">
                           Register Account
                         </a>
                         <hr>
@@ -98,24 +92,35 @@
 
 
 import router from "@/scripts/router";
-import store from "@/scripts/store";
 import Lnb from "@/components/LNB.vue";
 import TopBar from "@/components/TopBar.vue";
 import LogoutModal from "@/components/LogoutModal.vue";
+import {reactive} from "vue";
+import axios from "axios";
 
 export default {
   name: "Join",
   components: {LogoutModal, TopBar, Lnb},
   setup() {
-    const logout = () => {
-      store.commit('setAccount', 0);
-      sessionStorage.removeItem("id");
-      router.push({
-        path: "/"
+    const state = reactive({
+      form: {
+        email: "",
+        name: "",
+        password: ""
+      }
+    })
+
+    const submit = () => {
+      axios.post("/api/members/signUp", state.form).then((res)=>{
+        console.log(res.data)
+        window.alert("회원가입이 완료되었습니다.")
+        router.push({path: "/"})
+      }).catch(() => {
+        window.alert("회원가입에 실패했습니다.")
       })
     }
 
-    return {logout}
+    return {state, submit}
 
   }
 }

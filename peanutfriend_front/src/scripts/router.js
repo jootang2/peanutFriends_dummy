@@ -6,9 +6,9 @@ import AddBasket from "@/pages/AddBasket.vue";
 
 const routes = [
     {path: '/', component: Home},
-    {path: '/login', component: Login},
-    {path: '/join', component: Join},
-    {path: '/add/basket', component: AddBasket}
+    {path: '/100', component: Login},
+    {path: '/200', component: Join},
+    {path: '/300', component: AddBasket}
 ]
 
 const router = createRouter({

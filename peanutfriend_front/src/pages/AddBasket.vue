@@ -83,6 +83,7 @@ import Lnb from "@/components/LNB.vue";
 import {reactive} from "vue";
 import axios from "axios";
 import router from "@/scripts/router";
+import jwt_decode from "jwt-decode";
 
 export default {
   setup() {
@@ -94,8 +95,35 @@ export default {
       }
     })
 
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+          // eslint-disable-next-line
+          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    if(getCookie("atk")) {
+      const decoded = jwt_decode(getCookie("atk"))
+      let now = new Date();
+      let expiry = decoded.exp - Number(now.getTime().toString().substr(0, 10));
+      if (expiry < 30) {
+        const config = {
+          headers: {
+            "Authorization": "Bearer " + getCookie("atk"),
+          }
+        }
+        axios.post("/api/members/refreshToken", state.form, config).then(() => {
+        })
+      }
+    }
+
     const submit = () => {
-      axios.post("/api/basket/create", state.form).then((res) => {
+      const config = {
+        headers: {
+          "Authorization" : "Bearer " + getCookie("atk"),
+        }
+    }
+      axios.post("/api/basket/create", state.form, config).then((res) => {
         console.log(res)
         router.push({path: "/"})
       }).catch(() => {
