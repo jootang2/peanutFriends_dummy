@@ -88,7 +88,7 @@
             <router-link to="/300" class="collapse-item" >Add Basket</router-link>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
+            <router-link to="/400" class="collapse-item">Basket</router-link>
             <a class="collapse-item active" href="blank.html">Blank Page</a>
           </div>
         </div>

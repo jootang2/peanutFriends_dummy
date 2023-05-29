@@ -3,12 +3,14 @@ import Login from "@/pages/Login.vue";
 import {createRouter, createWebHistory} from "vue-router";
 import Join from "@/pages/Join.vue";
 import AddBasket from "@/pages/AddBasket.vue";
+import Basket from "@/pages/Basket.vue";
 
 const routes = [
     {path: '/', component: Home},
     {path: '/100', component: Login},
     {path: '/200', component: Join},
-    {path: '/300', component: AddBasket}
+    {path: '/300', component: AddBasket},
+    {path: '/400', component: Basket}
 ]
 
 const router = createRouter({
