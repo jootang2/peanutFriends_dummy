@@ -9,4 +9,11 @@ import lombok.Setter;
 public class RefreshTokenDto {
     @NotEmpty
     public String refreshToken;
+
+    public RefreshTokenDto(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public RefreshTokenDto() {
+    }
 }
