@@ -17,8 +17,8 @@
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
-          <div style="display: flex;flex-wrap: wrap;">
-            <Card v-for="i in 12" :key="i"/>
+          <div>
+            <Card :basket="basket" v-for="(basket, idx) in state.baskets" :key="idx"/>
           </div>
 
         </div>
@@ -43,11 +43,24 @@ import Lnb from "@/components/LNB.vue";
 import TopBar from "@/components/TopBar.vue";
 import LogoutModal from "@/components/LogoutModal.vue";
 import Card from "@/components/Card.vue";
+// import {reactive} from "vue";
+import axios from "axios";
+import {reactive} from "vue";
 
 export default {
   name: "Basket",
   components: {Card, LogoutModal, TopBar, Lnb},
   setup() {
+      const state = reactive({
+          baskets: []
+      })
+
+      axios.get("/api/baskets").then((res) => {
+          console.log(res.data)
+          state.baskets = res.data
+      })
+
+      return {state}
   }
 }
 </script>
