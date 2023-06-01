@@ -142,8 +142,6 @@ public class MemberController {
             Long memberId = JwtUtil.getMemberId(accessToken, accessSecretKey);
             return new ResponseEntity(memberId, HttpStatus.OK);
         }
-
         return new ResponseEntity(null, HttpStatus.OK);
-
     }
 }

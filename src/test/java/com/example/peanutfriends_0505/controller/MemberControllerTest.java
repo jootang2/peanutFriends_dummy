@@ -6,8 +6,10 @@ import com.example.peanutfriends_0505.dto.MemberLoginResponseDto;
 import com.example.peanutfriends_0505.dto.MemberSignUpDto;
 import com.example.peanutfriends_0505.dto.RefreshTokenDto;
 import com.example.peanutfriends_0505.service.MemberService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,15 +21,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -124,6 +127,67 @@ class MemberControllerTest {
                         .header("Authorization", "Bearer "+ accessToken)
                 )
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.refreshToken").exists())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그아웃")
+    void logout() throws Exception {
+        MemberSignUpDto memberSignUpDto = new MemberSignUpDto("signUpTest@test.com", "ABCabc123456!@#" , "송주환");
+
+        mockMvc.perform(post("/api/members/signUp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(memberSignUpDto))
+        );
+
+        MemberLoginDto memberLoginDto = new MemberLoginDto("signUpTest@test.com", "ABCabc123456!@#");
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/members/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(memberLoginDto))
+                )
+                .andReturn();
+        String response = mvcResult.getResponse().getContentAsString();
+        String accessToken = JsonPath.parse(response).read("$.accessToken");
+        String refreshToken = JsonPath.parse(response).read("$.refreshToken");
+
+        RefreshTokenDto refreshTokenDto = new RefreshTokenDto(refreshToken);
+
+        mockMvc.perform(post("/api/members/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(refreshTokenDto))
+                        .header("Authorization", "Bearer "+ accessToken)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 체크")
+    void loginCheck() throws Exception{
+        MemberSignUpDto memberSignUpDto = new MemberSignUpDto("signUpTest@test.com", "ABCabc123456!@#" , "송주환");
+
+        mockMvc.perform(post("/api/members/signUp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(memberSignUpDto))
+        );
+
+        MemberLoginDto memberLoginDto = new MemberLoginDto("signUpTest@test.com", "ABCabc123456!@#");
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/members/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(memberLoginDto))
+                )
+                .andReturn();
+        String response = mvcResult.getResponse().getContentAsString();
+        String accessToken = JsonPath.parse(response).read("$.accessToken");
+        mockMvc.perform(get("/api/members/check")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("atk", accessToken))
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string("1"))
                 .andDo(print());
     }
 
