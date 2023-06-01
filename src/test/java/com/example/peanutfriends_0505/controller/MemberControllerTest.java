@@ -10,7 +10,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.servlet.http.Cookie;
+import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,8 +57,14 @@ class MemberControllerTest {
                 .build();
     }
 
+    @AfterEach
+    public void clear() {
+        memberService.deleteAll();
+    }
+
     @Test
     @DisplayName("회원가입")
+    @org.springframework.transaction.annotation.Transactional
     void signUp() throws Exception{
         MemberSignUpDto memberSignUpDto = new MemberSignUpDto("signUpTest@test.com", "ABCabc123456!@#" , "송주환");
 

@@ -38,4 +38,8 @@ public class MemberService {
     public void removeMemberAccount(Member member) {
         memberRepository.delete(member);
     }
+
+    public void deleteAll() {
+        memberRepository.deleteAll();
+    }
 }
