@@ -64,7 +64,6 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원가입")
-    @org.springframework.transaction.annotation.Transactional
     void signUp() throws Exception{
         MemberSignUpDto memberSignUpDto = new MemberSignUpDto("signUpTest@test.com", "ABCabc123456!@#" , "송주환");
 

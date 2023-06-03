@@ -81,6 +81,10 @@ public class BasketController {
     }
 
     private Member getLoginMember(Authentication authentication) {
+        if(authentication == null){
+            System.out.println("authentication에 아무것도 없음");
+            return memberService.findById(1L);
+        }
         Long memberId = (Long) authentication.getPrincipal();
         Member loginMember = memberService.findById(memberId);
         return loginMember;

@@ -29,4 +29,8 @@ public class BasketService {
         Basket findBasket = basketRepository.findById(basketId).orElseThrow(() -> new IllegalArgumentException("잘못된 바구니정보 입니다."));
         return findBasket;
     }
+
+    public void deleteAll() {
+        basketRepository.deleteAll();
+    }
 }
