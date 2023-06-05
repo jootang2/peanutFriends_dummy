@@ -9,6 +9,7 @@ import com.example.peanutfriends_0505.repository.BasketMemberRepository;
 import com.example.peanutfriends_0505.service.BasketMemberService;
 import com.example.peanutfriends_0505.service.BasketService;
 import com.example.peanutfriends_0505.service.MemberService;
+import com.example.peanutfriends_0505.status.BasketStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,7 @@ public class BasketController {
         basket.setEndDate(addBasketDto.getEndDate());
         basket.setMasterMember(loginMember);
         basket.setRegDate(String.valueOf(LocalDate.now()));
+        basket.setStatus(String.valueOf(BasketStatus.WAIT));
 
         Basket saveBasket = basketService.addBasket(basket);
 

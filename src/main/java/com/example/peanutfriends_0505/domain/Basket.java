@@ -29,6 +29,9 @@ public class Basket {
 
     private String editDate;
 
+    @Enumerated(EnumType.ORDINAL)
+    private String status;
+
     public Basket() {
     }
 }
