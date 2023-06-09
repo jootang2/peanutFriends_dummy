@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface BasketMemberRepository extends JpaRepository<BasketMember, Long> {
-    List<BasketMember> findByBasketId(Long basketId);
+    List<BasketMember> findByBasket(Long basketId);
 }

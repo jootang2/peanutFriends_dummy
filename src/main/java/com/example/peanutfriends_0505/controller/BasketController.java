@@ -49,7 +49,7 @@ public class BasketController {
         basket.setEndDate(addBasketDto.getEndDate());
         basket.setMasterMember(loginMember);
         basket.setRegDate(String.valueOf(LocalDate.now()));
-        basket.setStatus(String.valueOf(BasketStatus.WAIT));
+        basket.setStatus("WAIT");
 
         Basket saveBasket = basketService.addBasket(basket);
 

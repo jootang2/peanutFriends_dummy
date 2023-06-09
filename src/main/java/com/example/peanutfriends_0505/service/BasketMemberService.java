@@ -25,7 +25,7 @@ public class BasketMemberService {
     }
 
     public List<BasketMember> findByBasketId(Long basketId){
-        List<BasketMember> findBasketMember = basketMemberRepository.findByBasketId(basketId);
+        List<BasketMember> findBasketMember = basketMemberRepository.findByBasket(basketId);
         return findBasketMember;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.peanutfriends_0505.domain;
 
+import com.example.peanutfriends_0505.status.BasketStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,6 @@ public class Basket {
 
     private String editDate;
 
-    @Enumerated(EnumType.ORDINAL)
     private String status;
 
     public Basket() {
