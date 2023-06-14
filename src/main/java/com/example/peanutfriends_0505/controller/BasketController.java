@@ -5,6 +5,7 @@ import com.example.peanutfriends_0505.domain.BasketMember;
 import com.example.peanutfriends_0505.domain.Member;
 import com.example.peanutfriends_0505.dto.AddBasketDto;
 import com.example.peanutfriends_0505.dto.AddBasketResponseDto;
+import com.example.peanutfriends_0505.dto.BasketResponseDto;
 import com.example.peanutfriends_0505.repository.BasketMemberRepository;
 import com.example.peanutfriends_0505.service.BasketMemberService;
 import com.example.peanutfriends_0505.service.BasketService;
@@ -80,6 +81,20 @@ public class BasketController {
 
         basketMemberService.addBasketMember(basketMember);
         return "join basket success";
+    }
+
+    @GetMapping("/basket/{basketId}")
+    public ResponseEntity basketDetail(@PathVariable Long basketId){
+        Basket findBasket = basketService.findById(basketId);
+        BasketResponseDto basketResponseDto = new BasketResponseDto();
+        basketResponseDto.setBasketId(findBasket.getBasketId());
+        basketResponseDto.setName(findBasket.getName());
+        basketResponseDto.setStartDate(findBasket.getStartDate());
+        basketResponseDto.setEndDate(findBasket.getEndDate());
+        basketResponseDto.setRegDate(findBasket.getRegDate());
+        basketResponseDto.setMasterMember(findBasket.getMasterMember());
+
+        return new ResponseEntity(basketResponseDto, HttpStatus.OK);
     }
 
     private Member getLoginMember(Authentication authentication) {

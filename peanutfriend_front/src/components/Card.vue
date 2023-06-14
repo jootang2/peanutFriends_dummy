@@ -2,7 +2,7 @@
   <!--Card-->
     <div style="display: flex">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
+            <router-link to="/500" class="card border-left-warning shadow h-100 py-2" style="cursor: pointer">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </router-link>
         </div>
         <a class="btn btn-success btn-lg" style="height: 42px;margin-top: 107px;" @click="joinBasket(basket.basketId)">참가 신청</a>
     </div>
@@ -72,6 +72,19 @@ export default {
             axios.post(`/api/basket/${basketId}/join`, state.form, config).then(() => {
                 console.log('success')
                 window.alert("참가신청에 성공했습니다.")
+            })
+        };
+
+        const basketDetail = (basketId) => {
+            const config = {
+                headers: {
+                    "Authorization" : "Bearer " + getCookie("atk"),
+                }
+            }
+            axios.get(`/api/basket/${basketId}`, config).then((res) => {
+                console.log('바구니 상세정보 클릭함')
+                console.log(res)
+
             })
         };
         return {joinBasket}
