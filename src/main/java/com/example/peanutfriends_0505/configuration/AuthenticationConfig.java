@@ -35,6 +35,7 @@ public class AuthenticationConfig {
                 .requestMatchers(GET, "/api/members/check").permitAll()
                 .requestMatchers(POST,"/api/members/signUp", "/api/members/login", "/api/members/refreshToken").permitAll()// 회원가입, 로그인은 항상 허용되어야 한다.
                 .requestMatchers(POST,"/api/**").authenticated()// 그 외, 나머지 api는 인증되어야 함
+                .requestMatchers(GET,"/api/**").authenticated()// 그 외, 나머지 api는 인증되어야 함
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt를 사용하는 경우 씀

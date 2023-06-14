@@ -2,7 +2,7 @@
   <!--Card-->
     <div style="display: flex">
         <div class="col-xl-3 col-md-6 mb-4">
-            <router-link to="/500" class="card border-left-warning shadow h-100 py-2" style="cursor: pointer">
+            <div class="card border-left-warning shadow h-100 py-2" style="cursor: pointer" @click="detail(basket.basketId)">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-            </router-link>
+            </div>
         </div>
         <a class="btn btn-success btn-lg" style="height: 42px;margin-top: 107px;" @click="joinBasket(basket.basketId)">참가 신청</a>
     </div>
@@ -30,9 +30,15 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import {reactive} from "vue";
+import basketDetail from "@/pages/BasketDetail.vue";
 
 export default {
     name: "Card",
+  computed: {
+    basketDetail() {
+      return basketDetail
+    }
+  },
     props: {
         basket: Object
     },
@@ -75,7 +81,7 @@ export default {
             })
         };
 
-        const basketDetail = (basketId) => {
+        const detail = (basketId) => {
             const config = {
                 headers: {
                     "Authorization" : "Bearer " + getCookie("atk"),
@@ -87,7 +93,7 @@ export default {
 
             })
         };
-        return {joinBasket}
+        return {joinBasket, detail}
     }
 }
 </script>

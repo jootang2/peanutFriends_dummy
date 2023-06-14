@@ -12,7 +12,7 @@ const routes = [
     {path: '/200', component: Join},
     {path: '/300', component: AddBasket},
     {path: '/400', component: Basket},
-    {path: '/500', component: BasketDetail},
+    {path: '/500/:id', component: BasketDetail},
 ]
 
 const router = createRouter({
